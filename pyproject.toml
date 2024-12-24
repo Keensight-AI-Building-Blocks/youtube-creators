@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "youtube-creators"
+version = "0.0.1"
+description = "AI Automation for Youtube Creators"
+authors = ["ameen-91 <mohammedameen9011@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+langgraph = {extras = ["openai"], version = "^0.2.60"}
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+pandas = "^2.2.3"
+sqlalchemy = "^2.0.36"
+psycopg2 = "^2.9.10"
+python-decouple = "^3.8"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

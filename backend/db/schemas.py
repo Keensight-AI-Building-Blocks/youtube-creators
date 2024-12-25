@@ -29,6 +29,7 @@ class TrendingDataSchema(BaseModel):
     title: str
     publishedAt: datetime
     channelTitle: str
+    categoryId: int
     trending_date: datetime
     tags: str
     view_count: int
@@ -38,3 +39,13 @@ class TrendingDataSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class GenerateVideoIdeasInput(BaseModel):
+    category_id: int
+    date: str
+    buffer: int
+
+
+# class GenerateVideoIdeasOutput(BaseModel):
+#     video_ideas: list[str]

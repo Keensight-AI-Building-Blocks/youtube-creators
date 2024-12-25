@@ -3,21 +3,24 @@ from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from pydantic import BaseModel
 from backend.config import config
 
 from backend.db.connect import get_db, SessionLocal
-from backend.db.schemas import TrendingDataDetailedSchema, TrendingDataSchema
+from backend.db.schemas import (
+    TrendingDataDetailedSchema,
+    TrendingDataSchema,
+    GenerateVideoIdeasInput,
+)
+
+from backend.agents.schemas import VideoIdeas
 from backend.db import utils as db_utils
+
+from backend.agents.workflows import generate_ideas_chain
 
 DEBUG = config.get("DEBUG", cast=bool, default=False)
 FRONTEND_ORIGINS = config.get(
     "FRONTEND_ORIGINS", cast=lambda x: [s.strip() for s in x.split(",")], default=""
 )
-
-
-class InputModel(BaseModel):
-    data: str
 
 
 app = FastAPI()
@@ -30,10 +33,11 @@ app.add_middleware(
 )
 
 
-@app.post("/execute")
-async def execute(input: InputModel):
-    result = input.data.upper()
-    return {"result": result}
+@app.post("/video_ideas", response_model=VideoIdeas)
+async def execute(inputs: GenerateVideoIdeasInput):
+    return generate_ideas_chain(
+        category_id=inputs.category_id, date=inputs.date, buffer=inputs.buffer
+    )
 
 
 @app.get("/health")

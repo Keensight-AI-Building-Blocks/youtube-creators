@@ -1,4 +1,6 @@
 from typing import List
+from datetime import datetime
+from pydantic import BaseModel
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,6 +12,8 @@ from backend.db.schemas import (
     TrendingDataDetailedSchema,
     TrendingDataSchema,
     GenerateVideoIdeasInput,
+    HealthCheckResponse,
+    MetadataResponse,
 )
 
 from backend.agents.schemas import VideoIdeas
@@ -24,6 +28,8 @@ FRONTEND_ORIGINS = config.get(
 
 
 app = FastAPI()
+start_time = datetime.now()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -40,14 +46,25 @@ async def execute(inputs: GenerateVideoIdeasInput):
     )
 
 
-@app.get("/health")
+@app.get("/health", response_model=HealthCheckResponse)
 async def health_check():
-    return {"status": "healthy"}
+    uptime = datetime.now() - start_time
+    return {
+        "status": "healthy",
+        "uptime": str(uptime),
+        "current_time": datetime.now().isoformat(),
+    }
 
 
-@app.get("/metadata")
+@app.get("/metadata", response_model=MetadataResponse)
 async def metadata():
-    return {"Debug": DEBUG}
+    return {
+        "Debug": DEBUG,
+        "Frontend_Origins": FRONTEND_ORIGINS,
+        "API_Key_Set": bool(config.get("API_KEY")),
+        "Model_Name": config.get("MODEL_NAME"),
+        "Base_URL": config.get("BASE_URL"),
+    }
 
 
 @app.get("/trending", response_model=List[TrendingDataSchema])

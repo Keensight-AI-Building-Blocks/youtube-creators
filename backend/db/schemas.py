@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel
+from typing import List
 
 
 class TrendingDataDetailedSchema(BaseModel):
@@ -47,5 +48,15 @@ class GenerateVideoIdeasInput(BaseModel):
     buffer: int
 
 
-# class GenerateVideoIdeasOutput(BaseModel):
-#     video_ideas: list[str]
+class HealthCheckResponse(BaseModel):
+    status: str
+    uptime: str
+    current_time: str
+
+
+class MetadataResponse(BaseModel):
+    Debug: bool
+    Frontend_Origins: List[str]
+    API_Key_Set: bool
+    Model_Name: str
+    Base_URL: str

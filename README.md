@@ -4,12 +4,29 @@ A FastAPI agentic service for Youtube creators.
 
 ## Features
 
+- **Video Ideas Endpoint**: Generate video ideas based on trending data.
+- **Comment Analysis Endpoint**: Analyze comments for a specific video.
 - **Health Check Endpoint**: Check the health status of the service.
 - **Metadata Endpoint**: Retrieve metadata about the service.
 - **Trending Data Endpoints**: Fetch trending YouTube data.
-- **Video Ideas Endpoint**: Generate video ideas based on trending data.
 
 ## Endpoints
+
+### Video Ideas
+
+- **POST** `/video_ideas`
+  - Generates video ideas based on trending data.
+  - Request Body:
+    - `category_id` (int): The category ID to filter trending data.
+    - `date` (str): The end date for fetching trending data.
+    - `buffer` (int): The number of days before the end date to start fetching data.
+
+### Comment Analysis
+
+- **POST** `/analyze_comments`
+  - Analyzes comments for a specific video.
+  - Request Body:
+    - `video_id` (str): The ID of the video.
 
 ### Health Check
 
@@ -33,15 +50,6 @@ A FastAPI agentic service for Youtube creators.
   - Fetches detailed trending data for a specific video ID.
   - Path Parameters:
     - `video_id` (str): The ID of the video.
-
-### Video Ideas
-
-- **POST** `/video_ideas`
-  - Generates video ideas based on trending data.
-  - Request Body:
-    - `category_id` (int): The category ID to filter trending data.
-    - `date` (str): The end date for fetching trending data.
-    - `buffer` (int): The number of days before the end date to start fetching data.
 
 ## Installation
 
@@ -93,6 +101,16 @@ BASE_URL = "https://api.openai.com/v1/"
 
 ## Schemas
 
+### CommentAnalysis
+
+Represents the schema for analyzing comments.
+
+- `strengths` (List[str]): List of strengths found in the comments.
+- `weaknesses` (List[str]): List of weaknesses found in the comments.
+- `opportunities` (List[str]): List of opportunities found in the comments.
+- `suggestions` (List[str]): List of suggestions found in the comments.
+- `overall_sentiment` (str): Describe overall sentiment of the comments.
+
 ### TrendingDataSchema
 
 Represents the schema for trending YouTube data.
@@ -109,27 +127,6 @@ Represents the schema for trending YouTube data.
 - `dislikes` (int): The number of dislikes.
 - `description` (str): The description of the video.
 
-### TrendingDataDetailedSchema
-
-Represents the detailed schema for a specific trending YouTube video.
-
-- `video_id` (str): The ID of the video.
-- `title` (str): The title of the video.
-- `publishedAt` (datetime): The publication date of the video.
-- `channelId` (str): The ID of the channel.
-- `channelTitle` (str): The title of the channel.
-- `categoryId` (int): The category ID of the video.
-- `trending_date` (datetime): The date the video started trending.
-- `tags` (str): The tags associated with the video.
-- `view_count` (int): The number of views.
-- `likes` (int): The number of likes.
-- `dislikes` (int): The number of dislikes.
-- `comment_count` (int): The number of comments.
-- `thumbnail_link` (str): The link to the thumbnail image.
-- `comments_disabled` (bool): Whether comments are disabled.
-- `ratings_disabled` (bool): Whether ratings are disabled.
-- `description` (str): The description of the video.
-
 ### GenerateVideoIdeasInput
 
 Represents the input schema for generating video ideas.
@@ -137,12 +134,6 @@ Represents the input schema for generating video ideas.
 - `category_id` (int): The category ID to filter trending data.
 - `date` (str): The end date for fetching trending data.
 - `buffer` (int): The number of days before the end date to start fetching data.
-
-### VideoIdea
-
-Represents a single video idea.
-
-- `video_idea` (str): The generated video idea.
 
 ### VideoIdeas
 
@@ -167,3 +158,9 @@ Represents the response schema for the metadata endpoint.
 - `API_Key_Set` (bool): Indicates if the API key is set.
 - `Model_Name` (str): The name of the model being used.
 - `Base_URL` (str): The base URL for API requests.
+
+### YoutubeComments
+
+Represents the schema for YouTube comments.
+
+- `Comments` (List[str]): A list of comments.

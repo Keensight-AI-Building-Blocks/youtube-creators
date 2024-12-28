@@ -23,7 +23,6 @@ FRONTEND_ORIGINS = config.get(
     "FRONTEND_ORIGINS", cast=lambda x: [s.strip() for s in x.split(",")], default=""
 )
 
-
 app = FastAPI()
 start_time = datetime.now()
 
@@ -34,7 +33,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.post("/analyze_comments", response_model=CommentAnalysis)
 async def execute_analyze_comments(request: Request):
@@ -57,7 +55,6 @@ async def health_check():
         "current_time": datetime.now().isoformat(),
     }
 
-
 @app.get("/metadata", response_model=MetadataResponse)
 async def metadata():
     return {
@@ -69,14 +66,11 @@ async def metadata():
         "YOUTUBE_API_Key_Set": bool(config.get("YOUTUBE_API_KEY")),
     }
 
-
-
 @app.post("/get_comments", response_model=YoutubeComments)
 async def fetch_comments(request: Request):
     data = await request.json()
     video_id = data.get("video_id")
     return {"Comments": get_comments(video_id)}
-
 
 @app.post("/get_trending_videos", response_model=TrendingVideos)
 async def fetch_trending_videos(request: Request):

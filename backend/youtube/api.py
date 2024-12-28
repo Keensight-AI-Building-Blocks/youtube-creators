@@ -11,7 +11,8 @@ def get_comments(video_id):
         part="snippet",
         videoId=video_id,
         textFormat="plainText",
-        maxResults=100
+        maxResults=50,
+        order="relevance",
     )
 
     response = request.execute()

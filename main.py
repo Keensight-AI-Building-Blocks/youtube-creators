@@ -47,9 +47,9 @@ async def execute(inputs: GenerateVideoIdeasInput):
     return generate_ideas_chain(
         category_id=inputs.category_id, date=inputs.date, buffer=inputs.buffer
     )
-@app.get("/get_comments", response_model=YoutubeComments)
+@app.post("/get_comments", response_model=YoutubeComments)
 async def fetch_comments(video_id: str):
-    return get_comments(video_id)
+    return {"Comments": get_comments(video_id)}
 
 @app.get("/health", response_model=HealthCheckResponse)
 async def health_check():

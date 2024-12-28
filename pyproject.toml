@@ -14,10 +14,12 @@ sqlalchemy = "^2.0.36"
 psycopg2 = "^2.9.10"
 python-decouple = "^3.8"
 langchain-openai = "^0.2.14"
+google-api-python-client = "^2.156.0"
 
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
+kaggle = "^1.6.17"
 mkdocs = "^1.6.1"
 
 [build-system]

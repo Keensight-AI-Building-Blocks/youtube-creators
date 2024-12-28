@@ -19,6 +19,9 @@ from backend.db.schemas import (
 from backend.agents.schemas import VideoIdeas
 from backend.db import utils as db_utils
 
+from backend.youtube.api import get_comments
+from backend.youtube.schemas import YoutubeComments
+
 from backend.agents.workflows import generate_ideas_chain
 
 DEBUG = config.get("DEBUG", cast=bool, default=False)
@@ -44,7 +47,9 @@ async def execute(inputs: GenerateVideoIdeasInput):
     return generate_ideas_chain(
         category_id=inputs.category_id, date=inputs.date, buffer=inputs.buffer
     )
-
+@app.get("/get_comments", response_model=YoutubeComments)
+async def fetch_comments(video_id: str):
+    return get_comments(video_id)
 
 @app.get("/health", response_model=HealthCheckResponse)
 async def health_check():

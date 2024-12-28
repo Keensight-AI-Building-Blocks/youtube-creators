@@ -1,25 +1,19 @@
-from langchain_core.prompts import PromptTemplate
 from backend.agents.connect import model
-from langchain_core.output_parsers import JsonOutputParser
-from backend.agents.schemas import VideoIdeas
 from backend.db import utils as db_utils
-from backend.db.connect import get_db, SessionLocal
+from backend.db.connect import SessionLocal
 from datetime import datetime, timedelta
+from backend.youtube.api import get_comments
+
+from backend.agents.prompts import video_ideas_parser, video_ideas_prompt, analyze_comments_prompt, comment_analysis_parser
 
 
-parser = JsonOutputParser(pydantic_object=VideoIdeas)
 
 
-prompt = PromptTemplate(
-    template="Answer the user query.\n{format_instructions}\n{input}\n",
-    input_variables=["input"],
-    partial_variables={"format_instructions": parser.get_format_instructions()},
-)
-
-video_ideas_chain = prompt | model | parser
+analyze_comments_chain = analyze_comments_prompt | model | comment_analysis_parser
+video_ideas_chain = video_ideas_prompt | model | video_ideas_parser
 
 
-def generate_ideas_chain(
+def generate_video_ideas(
     buffer: int = 7,
     date: str = datetime.today().strftime("%Y-%m-%d"),
     category_id: int = 26,
@@ -47,3 +41,9 @@ def generate_ideas_chain(
         ]
     )
     return video_ideas_chain.invoke({"input": input_text})
+
+def analyze_comments(video_id: str):
+    comments = get_comments(video_id)
+    input_text = "\n".join(comments)
+    return analyze_comments_chain.invoke({"input": input_text})
+

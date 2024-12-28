@@ -1,6 +1,5 @@
 from typing import List
 from datetime import datetime
-from pydantic import BaseModel
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,18 +10,18 @@ from backend.db.connect import get_db, SessionLocal
 from backend.db.schemas import (
     TrendingDataDetailedSchema,
     TrendingDataSchema,
-    GenerateVideoIdeasInput,
     HealthCheckResponse,
+    GenerateVideoIdeasInput,
     MetadataResponse,
 )
 
-from backend.agents.schemas import VideoIdeas
+from backend.agents.schemas import VideoIdeas, CommentAnalysis
 from backend.db import utils as db_utils
 
 from backend.youtube.api import get_comments
 from backend.youtube.schemas import YoutubeComments
 
-from backend.agents.workflows import generate_ideas_chain
+from backend.agents.workflows import generate_video_ideas, analyze_comments
 
 DEBUG = config.get("DEBUG", cast=bool, default=False)
 FRONTEND_ORIGINS = config.get(
@@ -43,13 +42,15 @@ app.add_middleware(
 
 
 @app.post("/video_ideas", response_model=VideoIdeas)
-async def execute(inputs: GenerateVideoIdeasInput):
-    return generate_ideas_chain(
+async def execute_video_ideas(inputs: GenerateVideoIdeasInput):
+    return generate_video_ideas(
         category_id=inputs.category_id, date=inputs.date, buffer=inputs.buffer
     )
-@app.post("/get_comments", response_model=YoutubeComments)
-async def fetch_comments(video_id: str):
-    return {"Comments": get_comments(video_id)}
+@app.post("/analyze_comments", response_model=CommentAnalysis)
+async def execute_analyze_comments(video_id: str):
+    return analyze_comments(video_id)
+
+
 
 @app.get("/health", response_model=HealthCheckResponse)
 async def health_check():
@@ -71,6 +72,11 @@ async def metadata():
         "Base_URL": config.get("BASE_URL"),
     }
 
+
+
+@app.post("/get_comments", response_model=YoutubeComments)
+async def fetch_comments(video_id: str):
+    return {"Comments": get_comments(video_id)}
 
 @app.get("/trending", response_model=List[TrendingDataSchema])
 async def get_trending_data(

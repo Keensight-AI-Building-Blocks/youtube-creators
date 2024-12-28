@@ -16,7 +16,7 @@ def get_comments(video_id):
     )
 
     response = request.execute()
-
+    print(response)
     comments = []
     for item in response['items']:
         comment = item['snippet']['topLevelComment']['snippet']['textDisplay']

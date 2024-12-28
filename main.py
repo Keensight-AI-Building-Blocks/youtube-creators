@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import config
@@ -37,11 +37,15 @@ app.add_middleware(
 
 
 @app.post("/analyze_comments", response_model=CommentAnalysis)
-async def execute_analyze_comments(video_id: str):
+async def execute_analyze_comments(request: Request):
+    data = await request.json()
+    video_id = data.get("video_id")
     return analyze_comments(video_id)
 
 @app.post("/generate_video_ideas")
-async def execute_generate_video_ideas(category_id: int):
+async def execute_generate_video_ideas(request: Request):
+    data = await request.json()
+    category_id = data.get("category_id")
     return generate_video_ideas(category_id)
 
 @app.get("/health", response_model=HealthCheckResponse)
@@ -68,10 +72,14 @@ async def metadata():
 
 
 @app.post("/get_comments", response_model=YoutubeComments)
-async def fetch_comments(video_id: str):
+async def fetch_comments(request: Request):
+    data = await request.json()
+    video_id = data.get("video_id")
     return {"Comments": get_comments(video_id)}
 
 
 @app.post("/get_trending_videos", response_model=TrendingVideos)
-async def fetch_trending_videos(category_id: str):
+async def fetch_trending_videos(request: Request):
+    data = await request.json()
+    category_id = data.get("category_id")
     return {"Videos": get_trending_videos(category_id)}

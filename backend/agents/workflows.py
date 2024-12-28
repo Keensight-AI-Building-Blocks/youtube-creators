@@ -2,44 +2,46 @@ from backend.agents.connect import model
 from backend.db import utils as db_utils
 from backend.db.connect import SessionLocal
 from datetime import datetime, timedelta
-from backend.youtube.api import get_comments
+from backend.youtube.api import get_comments, get_trending_videos
+from pydantic import BaseModel
+from typing import List
 
 from backend.agents.prompts import video_ideas_parser, video_ideas_prompt, analyze_comments_prompt, comment_analysis_parser
 
-
-
+class TrendingVideo(BaseModel):
+    title: str
+    channel: str
+    description: str
+    published_at: str
+    view_count: str
+    comment_count: str
+    topic_categories: List[str]
 
 analyze_comments_chain = analyze_comments_prompt | model | comment_analysis_parser
 video_ideas_chain = video_ideas_prompt | model | video_ideas_parser
 
-
-def generate_video_ideas(
-    buffer: int = 7,
-    date: str = datetime.today().strftime("%Y-%m-%d"),
-    category_id: int = 26,
-):
-    start_date = (
-        datetime.strptime(date, "%Y-%m-%d") - timedelta(days=buffer)
-    ).strftime("%Y-%m-%d")
-
-    session = SessionLocal()
-    offset = 0
-    limit = 10
-    trending = db_utils.get_trending_data_by_category_and_date(
-        session,
-        offset=offset,
-        limit=limit,
-        category_id=category_id,
-        start_date=start_date,
-        end_date=date,
-    )
-    session.close()
-    input_text = "\n".join(
-        [
-            f"{item.channelTitle} - {item.title} ({item.description}) - {item.tags} - {item.view_count}"
-            for item in trending
-        ]
-    )
+def generate_video_ideas(category_id: str):
+    trending_videos = get_trending_videos(category_id)
+    trending_videos_formated = []
+    for video in trending_videos:
+        trending_video = TrendingVideo(
+            title=video["title"],
+            channel=video["channel"],
+            description=video.get("description", ""),
+            published_at=video["published_at"],
+            view_count=video["view_count"],
+            comment_count=video["comment_count"],
+            topic_categories=video.get("topic_categories", [])
+        )
+        trending_videos_formated.append(f"""
+        Title: {trending_video.title}
+        Channel: {trending_video.channel}
+        Description: {trending_video.description}
+        Published At: {trending_video.published_at}
+        View Count: {trending_video.view_count}
+        Comment Count: {trending_video.comment_count}
+        Topic Categories: {", ".join(trending_video.topic_categories)}""")
+    input_text = "\n".join(trending_videos_formated)
     return video_ideas_chain.invoke({"input": input_text})
 
 def analyze_comments(video_id: str):

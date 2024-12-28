@@ -57,6 +57,7 @@ class HealthCheckResponse(BaseModel):
 class MetadataResponse(BaseModel):
     Debug: bool
     Frontend_Origins: List[str]
-    API_Key_Set: bool
+    OPENAI_API_Key_Set: bool
     Model_Name: str
     Base_URL: str
+    YOUTUBE_API_Key_Set: bool

@@ -1,7 +1,4 @@
 from backend.agents.connect import model
-from backend.db import utils as db_utils
-from backend.db.connect import SessionLocal
-from datetime import datetime, timedelta
 from backend.youtube.api import get_comments, get_trending_videos
 from pydantic import BaseModel
 from typing import List

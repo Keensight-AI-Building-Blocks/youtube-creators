@@ -9,17 +9,18 @@ A FastAPI agentic service for Youtube creators.
 - **Health Check Endpoint**: Check the health status of the service.
 - **Metadata Endpoint**: Retrieve metadata about the service.
 - **Trending Data Endpoints**: Fetch trending YouTube data.
+- **Comments Data Endpoint**: Fetch comment data for a specific video.
 
 ## Endpoints
 
 ### Video Ideas
 
-- **POST** `/video_ideas`
+- **POST** `/generate_video_ideas`
   - Generates video ideas based on trending data.
   - Request Body:
     - `category_id` (int): The category ID to filter trending data.
-    - `date` (str): The end date for fetching trending data.
-    - `buffer` (int): The number of days before the end date to start fetching data.
+  - Response:
+    - `video_ideas` (list[VideoIdea]): A list of generated video ideas.
 
 ### Comment Analysis
 
@@ -27,29 +28,51 @@ A FastAPI agentic service for Youtube creators.
   - Analyzes comments for a specific video.
   - Request Body:
     - `video_id` (str): The ID of the video.
+  - Response:
+    - `strengths` (List[str]): List of strengths found in the comments.
+    - `weaknesses` (List[str]): List of weaknesses found in the comments.
+    - `opportunities` (List[str]): List of opportunities found in the comments.
+    - `suggestions` (List[str]): List of suggestions found in the comments.
+    - `overall_sentiment` (str): Describe overall sentiment of the comments.
 
 ### Health Check
 
 - **GET** `/health`
   - Returns the health status of the service.
+  - Response:
+    - `status` (str): The health status of the service.
+    - `uptime` (str): The uptime of the service.
+    - `current_time` (str): The current time.
 
 ### Metadata
 
 - **GET** `/metadata`
   - Returns metadata about the service.
+  - Response:
+    - `Debug` (bool): Indicates if debug mode is enabled.
+    - `Frontend_Origins` (List[str]): List of allowed origins for CORS.
+    - `OPENAI_API_Key_Set` (bool): Indicates if the API key is set.
+    - `Model_Name` (str): The name of the model being used.
+    - `Base_URL` (str): The base URL for API requests.
+    - `YOUTUBE_API_Key_Set` (bool): Indicates if the YouTube API key is set.
 
-### Trending Data
+### Fetch Comments
 
-- **GET** `/trending`
-  - Fetches a list of trending YouTube data.
-  - Query Parameters:
-    - `limit` (int): Number of records to fetch.
-    - `offset` (int): Number of records to skip.
-
-- **GET** `/trending/{video_id}`
-  - Fetches detailed trending data for a specific video ID.
-  - Path Parameters:
+- **POST** `/get_comments`
+  - Fetches comments for a specific video.
+  - Request Body:
     - `video_id` (str): The ID of the video.
+  - Response:
+    - `Comments` (List[str]): A list of comments.
+
+### Fetch Trending Videos
+
+- **POST** `/get_trending_videos`
+  - Fetches trending videos for a specific category.
+  - Request Body:
+    - `category_id` (str): The category ID to filter trending data.
+  - Response:
+    - `Videos` (List[TrendingVideo]): A list of trending videos.
 
 ## Installation
 
@@ -87,17 +110,19 @@ Create a `.env` file in the root directory of the project and add the following 
 DATABASE_URL = "postgresql://username:password@hostname:port/database_name"
 DEBUG = 1
 FRONTEND_ORIGINS = "http://localhost:3000"
-API_KEY = "your_api_key_here"
+OPENAI_API_KEY = "your_api_key_here"
 MODEL_NAME = "gpt-4o-mini"
 BASE_URL = "https://api.openai.com/v1/"
+YOUTUBE_API_KEY = "youtube_api_key"
 ```
 
 - `DATABASE_URL`: The URL for the PostgreSQL database.
 - `DEBUG`: Set to `1` to enable debug mode.
 - `FRONTEND_ORIGINS`: Comma-separated list of allowed origins for CORS.
-- `API_KEY`: API key for external services.
+- `OPENAI_API_KEY`: API key for OPEN AI.
 - `MODEL_NAME`: The name of the model to use.
 - `BASE_URL`: The base URL for API requests.
+- `YOUTUBE_API_KEY`: API key for Youtube.
 
 ## Schemas
 
@@ -110,30 +135,6 @@ Represents the schema for analyzing comments.
 - `opportunities` (List[str]): List of opportunities found in the comments.
 - `suggestions` (List[str]): List of suggestions found in the comments.
 - `overall_sentiment` (str): Describe overall sentiment of the comments.
-
-### TrendingDataSchema
-
-Represents the schema for trending YouTube data.
-
-- `video_id` (str): The ID of the video.
-- `title` (str): The title of the video.
-- `publishedAt` (datetime): The publication date of the video.
-- `channelTitle` (str): The title of the channel.
-- `categoryId` (int): The category ID of the video.
-- `trending_date` (datetime): The date the video started trending.
-- `tags` (str): The tags associated with the video.
-- `view_count` (int): The number of views.
-- `likes` (int): The number of likes.
-- `dislikes` (int): The number of dislikes.
-- `description` (str): The description of the video.
-
-### GenerateVideoIdeasInput
-
-Represents the input schema for generating video ideas.
-
-- `category_id` (int): The category ID to filter trending data.
-- `date` (str): The end date for fetching trending data.
-- `buffer` (int): The number of days before the end date to start fetching data.
 
 ### VideoIdeas
 
@@ -155,12 +156,25 @@ Represents the response schema for the metadata endpoint.
 
 - `Debug` (bool): Indicates if debug mode is enabled.
 - `Frontend_Origins` (List[str]): List of allowed origins for CORS.
-- `API_Key_Set` (bool): Indicates if the API key is set.
+- `OPENAI_API_Key_Set` (bool): Indicates if the API key is set.
 - `Model_Name` (str): The name of the model being used.
 - `Base_URL` (str): The base URL for API requests.
+- `YOUTUBE_API_Key_Set` (bool): Indicates if the YouTube API key is set.
 
 ### YoutubeComments
 
 Represents the schema for YouTube comments.
 
 - `Comments` (List[str]): A list of comments.
+
+### TrendingVideo
+
+Represents the schema for a trending video.
+
+- `title` (str): The title of the video.
+- `channel` (str): The channel that published the video.
+- `description` (str): The description of the video.
+- `published_at` (str): The publication date of the video.
+- `view_count` (str): The view count of the video.
+- `comment_count` (str): The comment count of the video.
+- `topic_categories` (List[str]): The topic categories of the video.

@@ -11,7 +11,7 @@ def get_config():
     with open(ENV_FILE, "w") as f:
         f.write("DEBUG=True\n")
         f.write("DATABASE_URL=sqlite:///db.sqlite3\n")
-        f.write("FRONTEND_ORIGINS=http://localhost:3000\n")
+        f.write("FRONTEND_ORIGINS=['*']\n")
         f.write("OPENAI_API_KEY=your_openai_api_key_here\n")
         f.write("MODEL_NAME=gpt-4o-mini\n")
         f.write("BASE_URL=https://api.openai.com/v1/\n")

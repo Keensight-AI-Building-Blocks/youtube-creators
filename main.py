@@ -64,8 +64,8 @@ async def metadata():
         "Debug": DEBUG,
         "Frontend_Origins": FRONTEND_ORIGINS,
         "OPENAI_API_Key_Set": bool(config.get("OPENAI_API_KEY", default="")),
-        "Model_Name": config.get("MODEL_NAME"),
-        "Base_URL": config.get("BASE_URL"),
+        "Model_Name": config.get("MODEL_NAME", default=""),
+        "Base_URL": config.get("BASE_URL", default=""),
         "YOUTUBE_API_Key_Set": bool(config.get("YOUTUBE_API_KEY", default="")),
     }
 

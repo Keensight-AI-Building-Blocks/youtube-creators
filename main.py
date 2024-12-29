@@ -23,7 +23,7 @@ from backend.agents.workflows import generate_video_ideas, analyze_comments
 
 DEBUG = config.get("DEBUG", cast=bool, default=False)
 FRONTEND_ORIGINS = config.get(
-    "FRONTEND_ORIGINS", cast=lambda x: [s.strip() for s in x.split(",")], default=["*"]
+    "FRONTEND_ORIGINS", cast=lambda x: [s.strip() for s in x.split(",")], default="*"
 )
 
 app = FastAPI()

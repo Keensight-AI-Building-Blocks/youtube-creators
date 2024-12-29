@@ -63,10 +63,10 @@ async def metadata():
     return {
         "Debug": DEBUG,
         "Frontend_Origins": FRONTEND_ORIGINS,
-        "OPENAI_API_Key_Set": bool(config.get("OPENAI_API_KEY")),
+        "OPENAI_API_Key_Set": bool(config.get("OPENAI_API_KEY", default="")),
         "Model_Name": config.get("MODEL_NAME"),
         "Base_URL": config.get("BASE_URL"),
-        "YOUTUBE_API_Key_Set": bool(config.get("YOUTUBE_API_KEY")),
+        "YOUTUBE_API_Key_Set": bool(config.get("YOUTUBE_API_KEY", default="")),
     }
 
 @app.post("/get_comments", response_model=YoutubeComments)

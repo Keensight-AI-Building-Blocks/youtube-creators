@@ -1,14 +1,17 @@
 from datetime import datetime
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import os
 
-from backend.config import config
+from backend.config import config, write_to_env_file
 
 from backend.db.schemas import (
     HealthCheckResponse,
     GenerateVideoIdeasInput,
     MetadataResponse,
+    SetEnvVarInput,
+    SetEnvVarsInput
 )
 
 from backend.agents.schemas import VideoIdeas, CommentAnalysis
@@ -77,3 +80,14 @@ async def fetch_trending_videos(request: Request):
     data = await request.json()
     category_id = data.get("category_id")
     return {"Videos": get_trending_videos(category_id)}
+
+@app.post("/set_env_var")
+async def set_env_var(input: SetEnvVarInput):
+    write_to_env_file(input.key, input.value)
+    return {"status": "success"}
+
+@app.post("/set_env_vars")
+async def set_env_vars(input: SetEnvVarsInput):
+    for key, value in input.vars.items():
+        write_to_env_file(key, value)
+    return {"status": "success"}

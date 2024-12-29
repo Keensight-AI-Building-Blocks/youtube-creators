@@ -61,3 +61,10 @@ class MetadataResponse(BaseModel):
     Model_Name: str
     Base_URL: str
     YOUTUBE_API_Key_Set: bool
+
+class SetEnvVarInput(BaseModel):
+    key: str
+    value: str
+
+class SetEnvVarsInput(BaseModel):
+    vars: dict

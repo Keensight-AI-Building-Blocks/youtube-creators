@@ -6,7 +6,7 @@ authors = ["ameen-91 <mohammedameen9011@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.14"
 langgraph = {extras = ["openai"], version = "^0.2.60"}
 fastapi = {extras = ["standard"], version = "^0.115.6"}
 pandas = "^2.2.3"
@@ -16,6 +16,13 @@ python-decouple = "^3.8"
 langchain-openai = "^0.2.14"
 google-api-python-client = "^2.156.0"
 psycopg2-binary = "^2.9.10"
+langchain = "^0.3.14"
+qdrant-client = "^1.12.2"
+youtube-transcript-api = "^0.6.3"
+pyopenssl = "^25.0.0"
+certifi = "^2024.12.14"
+langchain-qdrant = "^0.2.0"
+langchain-community = "^0.3.14"
 
 
 [tool.poetry.group.dev.dependencies]

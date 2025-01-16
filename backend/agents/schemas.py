@@ -14,9 +14,7 @@ class VideoIdeas(BaseModel):
 
 
 class CommentAnalysis(BaseModel):
-    strengths: list[str] = Field(
-        description="List of strengths found in the comments."
-    )
+    strengths: list[str] = Field(description="List of strengths found in the comments.")
     weaknesses: list[str] = Field(
         description="List of weaknesses found in the comments."
     )
@@ -29,3 +27,12 @@ class CommentAnalysis(BaseModel):
     overall_sentiment: str = Field(
         description="Describe overall sentiment of the comments."
     )
+
+
+class QueryRequest(BaseModel):
+    query: str
+    chat_history: list[str]
+
+
+class QueryResponse(BaseModel):
+    answer: str

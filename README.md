@@ -1,6 +1,6 @@
 # YouTube Creators
 
-A FastAPI agentic service for Youtube creators.
+A FastAPI agentic service for YouTube creators.
 
 ## Features
 
@@ -10,6 +10,8 @@ A FastAPI agentic service for Youtube creators.
 - **Metadata Endpoint**: Retrieve metadata about the service.
 - **Trending Data Endpoints**: Fetch trending YouTube data.
 - **Comments Data Endpoint**: Fetch comment data for a specific video.
+- **Load Transcript Endpoint**: Load YouTube transcript data into Qdrant.
+- **Query Transcript Endpoint**: Query data from Qdrant using LangGraph.
 
 ## Endpoints
 
@@ -74,6 +76,26 @@ A FastAPI agentic service for Youtube creators.
   - Response:
     - `Videos` (List[TrendingVideo]): A list of trending videos.
 
+### Load Transcript
+
+- **POST** `/load`
+  - Loads YouTube transcript data into Qdrant.
+  - Request Body:
+    - `video_id` (str): The ID of the video.
+  - Response:
+    - `message` (str): Success message.
+    - `points_added` (int): Number of points added to Qdrant.
+
+### Query Transcript
+
+- **POST** `/query`
+  - Queries data from Qdrant using LangGraph.
+  - Request Body:
+    - `query` (str): The query string.
+    - `chat_history` (list[str]): The chat history.
+  - Response:
+    - `answer` (str): The answer to the query.
+
 ## Installation
 
 1. Clone the repository:
@@ -102,6 +124,22 @@ A FastAPI agentic service for Youtube creators.
    uvicorn main:app --reload
    ```
 
+## Setting Up Qdrant Using Docker
+
+1. Pull the Qdrant Docker image:
+   ```bash
+   docker pull qdrant/qdrant
+   ```
+
+2. Run the Qdrant container:
+   ```bash
+   docker run -p 6333:6333 -p 6334:6334 \
+    -v $(pwd)/qdrant_storage:/qdrant/storage:z \
+    qdrant/qdrant
+   ```
+
+3. Verify that Qdrant is running by accessing `http://localhost:6333` in your browser.
+
 ## Environment Variables
 
 Create a `.env` file in the root directory of the project and add the following variables:
@@ -119,10 +157,10 @@ YOUTUBE_API_KEY = "youtube_api_key"
 - `DATABASE_URL`: The URL for the PostgreSQL database.
 - `DEBUG`: Set to `1` to enable debug mode.
 - `FRONTEND_ORIGINS`: Comma-separated list of allowed origins for CORS.
-- `OPENAI_API_KEY`: API key for OPEN AI.
+- `OPENAI_API_KEY`: API key for OpenAI.
 - `MODEL_NAME`: The name of the model to use.
 - `BASE_URL`: The base URL for API requests.
-- `YOUTUBE_API_KEY`: API key for Youtube.
+- `YOUTUBE_API_KEY`: API key for YouTube.
 
 ## Schemas
 
@@ -178,3 +216,29 @@ Represents the schema for a trending video.
 - `view_count` (str): The view count of the video.
 - `comment_count` (str): The comment count of the video.
 - `topic_categories` (List[str]): The topic categories of the video.
+
+### LoadDataRequest
+
+Represents the request schema for loading YouTube transcript data.
+
+- `video_id` (str): The ID of the video.
+
+### LoadDataResponse
+
+Represents the response schema for loading YouTube transcript data.
+
+- `message` (str): Success message.
+- `points_added` (int): Number of points added to Qdrant.
+
+### QueryRequest
+
+Represents the request schema for querying data from Qdrant.
+
+- `query` (str): The query string.
+- `chat_history` (list[str]): The chat history.
+
+### QueryResponse
+
+Represents the response schema for querying data from Qdrant.
+
+- `answer` (str): The answer to the query.

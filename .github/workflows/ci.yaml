@@ -32,6 +32,8 @@ jobs:
           poetry run pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term
           poetry run coverage-badge -o coverage.svg
       - name: Commit coverage badge to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -39,4 +41,4 @@ jobs:
           git reset
           git add coverage.svg
           git commit -m "Update coverage badge"
-          git push -f origin gh-pages
+          git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Keensight-AI-Building-Blocks/youtube-creators.git gh-pages

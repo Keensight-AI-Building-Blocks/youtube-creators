@@ -55,7 +55,7 @@ app.add_middleware(
 )
 
 
-@app.post("/load", response_model=LoadDataResponse)
+@app.post("/load")
 async def load_data(request: LoadDataRequest):
     try:
         return load_transcript(request.video_id)

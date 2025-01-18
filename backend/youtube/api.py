@@ -3,6 +3,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from backend.youtube.connect import vector_store
+import time
 
 
 def get_comments(video_id, max_results=50):
@@ -55,7 +56,7 @@ def get_trending_videos(category_id, max_results=10):
 def load_transcript(video_id):
 
     attempts = 0
-    while attempts < 3:
+    while attempts < 10:
         try:
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
             combined_text = " ".join([entry["text"] for entry in transcript])
@@ -71,8 +72,9 @@ def load_transcript(video_id):
             }
         except Exception as e:
             attempts += 1
-            if attempts == 3:
+            if attempts == 10:
                 return {
-                    "message": "Failed to load transcript after 3 attempts.",
+                    "message": "Failed to load transcript after 10 attempts.",
                     "error": str(e),
                 }
+            time.sleep(1)

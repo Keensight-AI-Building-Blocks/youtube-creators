@@ -7,6 +7,9 @@ from qdrant_client.http.models import Distance, VectorParams
 
 api_key = config.get("YOUTUBE_API_KEY", default="abc123")
 
+if not api_key:
+    raise ValueError("YOUTUBE_API_KEY is not set in the environment variables")
+
 service = build("youtube", "v3", developerKey=api_key)
 
 client = QdrantClient(path=":memory:")

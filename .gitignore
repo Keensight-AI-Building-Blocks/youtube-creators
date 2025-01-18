@@ -172,5 +172,5 @@ cython_debug/
 /private
 *ipynb
 /qdrant_storage
-
+/qdrant_data
 /http:

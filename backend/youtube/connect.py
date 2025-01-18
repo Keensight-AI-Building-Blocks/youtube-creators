@@ -9,7 +9,7 @@ api_key = config.get("YOUTUBE_API_KEY", default="abc123")
 
 service = build("youtube", "v3", developerKey=api_key)
 
-client = QdrantClient(path="http://localhost:6333")
+client = QdrantClient(path=":memory:")
 collection_name = "youtube_transcripts"
 embeddings = OpenAIEmbeddings()
 

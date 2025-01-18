@@ -2,13 +2,18 @@ from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from backend.config import config, write_to_env_file
-
 from backend.db.schemas import (
     HealthCheckResponse,
     MetadataResponse,
     SetEnvVarsInput,
 )
 
+from backend.exceptions import (
+    TranscriptLoadError,
+    QueryError,
+    AnalyzeCommentsError,
+    GenerateVideoIdeasError,
+)
 
 from backend.agents.schemas import (
     CommentAnalysis,
@@ -52,12 +57,18 @@ app.add_middleware(
 
 @app.post("/load", response_model=LoadDataResponse)
 async def load_data(request: LoadDataRequest):
-    return load_transcript(request.video_id)
+    try:
+        return load_transcript(request.video_id)
+    except Exception as e:
+        raise TranscriptLoadError(detail=str(e))
 
 
 @app.post("/query", response_model=QueryResponse)
 async def query(request: QueryRequest):
-    return query_transcripts(request.query, [])
+    try:
+        return query_transcripts(request.query, [])
+    except Exception as e:
+        raise QueryError(detail=str(e))
 
 
 @app.post("/query_test")
@@ -68,16 +79,21 @@ async def query_test(request: QueryRequest):
 
 @app.post("/analyze_comments", response_model=CommentAnalysis)
 async def execute_analyze_comments(request: Request):
-    data = await request.json()
-    video_id = data.get("video_id")
-    return analyze_comments(video_id)
+    try:
+        data = await request.json()
+        return analyze_comments(data)
+    except Exception as e:
+        raise AnalyzeCommentsError(detail=str(e))
 
 
 @app.post("/generate_video_ideas")
 async def execute_generate_video_ideas(request: Request):
-    data = await request.json()
-    category_id = data.get("category_id")
-    return generate_video_ideas(category_id)
+    try:
+        data = await request.json()
+        category_id = data.get("category_id")
+        return generate_video_ideas(category_id)
+    except Exception as e:
+        raise GenerateVideoIdeasError(detail=str(e))
 
 
 @app.get("/health", response_model=HealthCheckResponse)

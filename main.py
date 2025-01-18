@@ -6,7 +6,6 @@ from backend.config import config, write_to_env_file
 from backend.db.schemas import (
     HealthCheckResponse,
     MetadataResponse,
-    SetEnvVarInput,
     SetEnvVarsInput,
 )
 

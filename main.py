@@ -117,12 +117,6 @@ async def fetch_trending_videos(request: Request):
     return {"Videos": get_trending_videos(category_id)}
 
 
-@app.post("/set_env_var")
-async def set_env_var(input: SetEnvVarInput):
-    write_to_env_file(input.key, input.value)
-    return {"status": "success"}
-
-
 @app.post("/set_env_vars")
 async def set_env_vars(input: SetEnvVarsInput):
     for key, value in input.vars.items():

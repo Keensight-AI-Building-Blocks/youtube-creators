@@ -54,13 +54,25 @@ def get_trending_videos(category_id, max_results=10):
 
 def load_transcript(video_id):
 
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-    combined_text = " ".join([entry["text"] for entry in transcript])
-    documents = [Document(page_content=combined_text)]
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    all_splits = text_splitter.split_documents(documents)
-    vector_store.add_documents(documents=all_splits)
-    return {
-        "message": "Transcript loaded successfully.",
-        "points_added": len(all_splits),
-    }
+    attempts = 0
+    while attempts < 3:
+        try:
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+            combined_text = " ".join([entry["text"] for entry in transcript])
+            documents = [Document(page_content=combined_text)]
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=1000, chunk_overlap=200
+            )
+            all_splits = text_splitter.split_documents(documents)
+            vector_store.add_documents(documents=all_splits)
+            return {
+                "message": "Transcript loaded successfully.",
+                "points_added": len(all_splits),
+            }
+        except Exception as e:
+            attempts += 1
+            if attempts == 3:
+                return {
+                    "message": "Failed to load transcript after 3 attempts.",
+                    "error": str(e),
+                }

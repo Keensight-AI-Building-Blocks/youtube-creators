@@ -30,6 +30,7 @@ from backend.agents.workflows import (
     generate_video_ideas,
     analyze_comments,
     query_transcripts,
+    rag_graph,
 )
 
 
@@ -58,6 +59,12 @@ async def load_data(request: LoadDataRequest):
 @app.post("/query", response_model=QueryResponse)
 async def query(request: QueryRequest):
     return query_transcripts(request.query, [])
+
+
+@app.post("/query_test")
+async def query_test(request: QueryRequest):
+    res = rag_graph.invoke({"question": request.query, "context": request.chat_history})
+    return {"answer": res["answer"], "retrieval_context": res["context"]}
 
 
 @app.post("/analyze_comments", response_model=CommentAnalysis)

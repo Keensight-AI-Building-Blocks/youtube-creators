@@ -547,6 +547,21 @@ tomli = {version = "*", optional = true, markers = "python_full_version <= \"3.1
 toml = ["tomli"]
 
 [[package]]
+name = "coverage-badge"
+version = "1.1.2"
+description = "Generate coverage badges for Coverage.py."
+optional = false
+python-versions = "*"
+files = [
+    {file = "coverage_badge-1.1.2-py2.py3-none-any.whl", hash = "sha256:d8413ce51c91043a1692b943616b450868cbeeb0ea6a0c54a32f8318c9c96ff7"},
+    {file = "coverage_badge-1.1.2.tar.gz", hash = "sha256:fe7ed58a3b72dad85a553b64a99e963dea3847dcd0b8ddd2b38a00333618642c"},
+]
+
+[package.dependencies]
+coverage = "*"
+setuptools = "*"
+
+[[package]]
 name = "cryptography"
 version = "44.0.0"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
@@ -4463,4 +4478,4 @@ requests = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.14"
-content-hash = "6bde2286a066106c2b3a5c9a501e8e79c68ae4d7daa5890f929056643c2fe241"
+content-hash = "56341930ef1d1baeb5a9ebfe25576cf437dd169affcabacc47b0edce6ed42c0a"

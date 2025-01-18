@@ -5,7 +5,7 @@ client = TestClient(app)
 
 
 def test_load_data():
-    response = client.post("/load", json={"video_id": "ssxCQuv3KzE"})
+    response = client.post("/load", json={"video_id": "vddu2jmfVbI"})
     assert (
         response.status_code == 200
     ), f"Expected status code 200, but got {response.status_code}. Response: {response.text}"
@@ -65,7 +65,7 @@ def test_metadata():
 
 
 def test_get_comments():
-    response = client.post("/get_comments", json={"video_id": "ssxCQuv3KzE"})
+    response = client.post("/get_comments", json={"video_id": "vddu2jmfVbI"})
     assert (
         response.status_code == 200
     ), f"Expected status code 200, but got {response.status_code}. Response: {response.text}"
@@ -76,7 +76,7 @@ def test_get_comments():
 
 
 def test_get_trending_videos():
-    response = client.post("/get_trending_videos", json={"category_id": 1})
+    response = client.post("/get_trending_videos", json={"category_id": 24})
     assert (
         response.status_code == 200
     ), f"Expected status code 200, but got {response.status_code}. Response: {response.text}"

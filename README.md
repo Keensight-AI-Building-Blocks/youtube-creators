@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Keensight-AI-Building-Blocks/youtube-creators/actions/workflows/ci.yaml/badge.svg)](https://github.com/Keensight-AI-Building-Blocks/youtube-creators/actions/workflows/ci.yaml)
 
-
+![Coverage](static/coverage.svg)
 
 A FastAPI agentic service for YouTube creators.
 

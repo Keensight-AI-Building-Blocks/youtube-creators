@@ -12,8 +12,8 @@ A FastAPI agentic service for YouTube creators.
 - **Comment Analysis Endpoint**: Analyze comments for a specific video.
 - **Health Check Endpoint**: Check the health status of the service.
 - **Metadata Endpoint**: Retrieve metadata about the service.
-- **Trending Data Endpoints**: Fetch trending YouTube data.
 - **Comments Data Endpoint**: Fetch comment data for a specific video.
+- **Trending Data Endpoints**: Fetch trending YouTube data.
 - **Load Transcript Endpoint**: Load YouTube transcript data into Qdrant.
 - **Query Transcript Endpoint**: Query data from Qdrant using LangGraph.
 

@@ -4,16 +4,15 @@ from main import app
 client = TestClient(app)
 
 
-# def test_load_data():
-#     response = client.post("/load", json={"video_id": "some_video_id"})
-#     assert response.status_code == 200
-#     assert "transcript" in response.json()
+def test_load_data():
+    response = client.post("/load", json={"video_id": "ssxCQuv3KzE"})
+    assert response.status_code == 200
 
 
-# def test_query():
-#     response = client.post("/query", json={"query": "some_query", "chat_history": []})
-#     assert response.status_code == 200
-#     assert "answer" in response.json()
+def test_query():
+    response = client.post("/query", json={"query": "some_query", "chat_history": []})
+    assert response.status_code == 200
+    assert "answer" in response.json()
 
 
 def test_health_check():

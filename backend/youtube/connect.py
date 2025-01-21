@@ -12,7 +12,7 @@ if not api_key:
 
 service = build("youtube", "v3", developerKey=api_key)
 
-client = QdrantClient(path="./qdrant_data")
+client = QdrantClient(path=":memory:")
 collection_name = "youtube_transcripts"
 embeddings = OpenAIEmbeddings()
 
